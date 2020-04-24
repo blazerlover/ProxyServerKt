@@ -1,0 +1,27 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.71'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.json:json:20190722"
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    compile "com.sparkjava:spark-core:2.3"
+    compile "com.sparkjava:spark-kotlin:1.0.0-alpha"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation "org.slf4j:slf4j-simple:1.7.21"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
