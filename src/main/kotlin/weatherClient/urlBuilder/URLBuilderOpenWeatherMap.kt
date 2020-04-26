@@ -1,14 +1,13 @@
 package weatherClient.urlBuilder
 
-
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.json.JSONObject
 import weatherServer.*
 import weatherServer.request.ClientRequest
 import weatherServer.request.ClientRequestByCityName
 import weatherServer.request.ClientRequestByLocation
-import org.json.simple.parser.JSONParser
-import java.io.FileNotFoundException
-import java.io.FileReader
 import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
@@ -51,10 +50,11 @@ class URLBuilderOpenWeatherMap : URLBuilder {
     private fun buildSelector(requestParams: String): URL {
         return when (requestParams) {
             REQUEST_PARAM_BY_LOCATION -> buildURLByLocation(latitude, longitude)
-            else ->
-//                не работает для onecall, только для current!!!!!!!!
-
-                buildURLByCityName(cityName)
+            else -> {
+//                не работает для onecall, приходится вычеслять координаты по названию города!
+                getCityLocation(cityName)
+                buildURLByLocation(latitude, longitude)
+            }
         }
     }
 
@@ -79,7 +79,7 @@ class URLBuilderOpenWeatherMap : URLBuilder {
         return url
     }
 
-    //не работает для /onecall!!!
+    //не работает для /onecall! нужна платная подписка для другого запроса
     private fun buildURLByCityName(cityName: String): URL {
         val sCityName = "q=$cityName"
 
@@ -98,16 +98,31 @@ class URLBuilderOpenWeatherMap : URLBuilder {
         return url
     }
 
-//    private fun getCityLocation(cityName: String) {
-//        var parser: JSONParser = JSONParser()
-//        try {
-//            val obj: Any = parser.parse(FileReader("city.list.json"))
-//            var jsonObject = obj as JSONObject
-//
-//        } catch (e: FileNotFoundException) {
-//            e.printStackTrace()
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//        }
-//    }
+    private fun getCityLocation(cityName: String) {
+
+        var message: String? = null
+        val url: URL
+
+        val builder = HttpUrl.parse("https://api.opencagedata.com/geocode/v1/json?q=$cityName&key=608b35e49a8c40b4bdb0d5790029dffd")!!.newBuilder()
+
+        url = builder.build().url()
+        println(url)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+                .url(url)
+                .build()
+        val call = client.newCall(request)
+        try {
+            call.execute().use { response -> message = response.body()!!.string() }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        var jsonObject = JSONObject(message)
+        val jsonArray = jsonObject.getJSONArray("results")
+        jsonObject = jsonArray.getJSONObject(5)
+        println(jsonObject)
+        latitude = jsonObject.getJSONObject("geometry").getDouble("lat")
+        longitude = jsonObject.getJSONObject("geometry").getDouble("lng")
+    }
 }
