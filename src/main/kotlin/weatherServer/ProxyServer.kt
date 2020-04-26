@@ -31,9 +31,9 @@ class ProxyServer {
         val forecastService = ForecastService(requestManager, clientRequestFactory)
 //        test
         val jsonObject3 = requestManager.getForecast(ClientRequestByLocation(REQUEST_PARAM_BY_LOCATION,
-                "hourly",60.0494, 30.4458))
+                "daily",60.0494, 130.4458))
         val jsonObject4 = requestManager.getForecast(ClientRequestByCityName(REQUEST_PARAM_BY_CITY_NAME,
-                "current","London"))
+                "current","Jakarta"))
 
         println(jsonObject3)
         println(jsonObject4)
