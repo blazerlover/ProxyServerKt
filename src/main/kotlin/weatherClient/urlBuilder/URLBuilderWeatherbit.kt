@@ -47,7 +47,6 @@ class URLBuilderWeatherbit: URLBuilder {
         return when (requestParams) {
             REQUEST_PARAM_BY_LOCATION -> buildURLByLocation(latitude, longitude)
             else ->
-//                не работает для onecall, только для current!!!!!!!!
                 buildURLByCityName(cityName)
         }
     }
