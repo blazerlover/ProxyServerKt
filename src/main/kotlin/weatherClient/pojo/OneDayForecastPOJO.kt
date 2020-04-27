@@ -1,4 +1,4 @@
 package weatherClient.pojo
 
-class CurrentWeatherPOJO(val weather: Weather, val pod: String, val temp: Double, val feelLike: Double,
+class OneDayForecastPOJO(val weather: Weather, val date: Long, val temp: Double,
                          val pressure: Double, val humidity: Double, val windSpeed: Double)

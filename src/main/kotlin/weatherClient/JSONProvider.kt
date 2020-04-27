@@ -5,8 +5,8 @@ import org.json.JSONException
 import org.json.JSONObject
 
 import weatherClient.pojo.CurrentWeatherPOJO
-import weatherClient.pojo.DailyForecastPOJO
-import weatherClient.pojo.HourlyForecastPOJO
+import weatherClient.pojo.OneDayForecastPOJO
+import weatherClient.pojo.OneHourForecastPOJO
 import weatherClient.pojo.Weather
 
 class JSONProvider {
@@ -16,7 +16,7 @@ class JSONProvider {
     fun getCurrentWeatherJSON(currentWeatherPOJO: CurrentWeatherPOJO): JSONObject {
         jsonObject = JSONObject()
 
-        jsonObject.put("weather", toJSON(currentWeatherPOJO.weather))
+        jsonObject.put("weather", weatherToJSON(currentWeatherPOJO.weather))
                 .put("pod", currentWeatherPOJO.pod)
                 .put("temp", currentWeatherPOJO.temp)
                 .put("feelLike", currentWeatherPOJO.feelLike)
@@ -26,13 +26,12 @@ class JSONProvider {
         return jsonObject
     }
 
-    fun getHourlyForecastJSON(hourlyForecastPOJO: HourlyForecastPOJO): JSONObject {
+    fun getHourlyForecastJSON(hourlyForecasts: Array<OneHourForecastPOJO?>): JSONObject {
         val jsonArray = JSONArray()
         jsonObject = JSONObject()
-        val hourlyForecasts: Array<HourlyForecastPOJO.HourlyForecast?> = hourlyForecastPOJO.hourlyForecasts
         for (i in hourlyForecasts.indices) {
             val lJsonObject = JSONObject()
-            lJsonObject.put("weather", toJSON(hourlyForecasts[i]?.weather))
+            lJsonObject.put("weather", weatherToJSON(hourlyForecasts[i]?.weather))
                     .put("pod", hourlyForecasts[i]?.pod)
                     .put("dt", hourlyForecasts[i]?.date)
                     .put("eve", hourlyForecasts[i]?.temp)
@@ -49,13 +48,12 @@ class JSONProvider {
         return jsonObject
     }
 
-    fun getDailyForecastJSON(dailyForecastPOJO: DailyForecastPOJO): JSONObject {
+    fun getDailyForecastJSON(dailyForecasts: Array<OneDayForecastPOJO?>): JSONObject {
         val jsonArray = JSONArray()
         jsonObject = JSONObject()
-        val dailyForecasts: Array<DailyForecastPOJO.DailyForecast?> = dailyForecastPOJO.dailyForecasts
         for (i in dailyForecasts.indices) {
             val lJsonObject = JSONObject()
-            lJsonObject.put("weather",toJSON(dailyForecasts[i]?.weather))
+            lJsonObject.put("weather", weatherToJSON(dailyForecasts[i]?.weather))
                     .put("dt", dailyForecasts[i]?.date)
                     .put("eve", dailyForecasts[i]?.temp)
                     .put("pressure", dailyForecasts[i]?.pressure)
@@ -71,8 +69,8 @@ class JSONProvider {
         return jsonObject
     }
 
-    private fun toJSON(weather: Weather?): JSONObject {
-        var jsonObject = JSONObject()
+    private fun weatherToJSON(weather: Weather?): JSONObject {
+        val jsonObject = JSONObject()
         jsonObject.put("code", weather?.code)
         jsonObject.put("description", weather?.description)
         return jsonObject

@@ -27,12 +27,12 @@ class RequestManager constructor(
                 return jsonProvider.getCurrentWeatherJSON(currentWeatherPOJO)
             }
             HOURLY -> {
-                val hourlyForecastPOJO = jsonParser.parseHourlyForecast(response)
-                return jsonProvider.getHourlyForecastJSON(hourlyForecastPOJO)
+                val hourlyForecasts = jsonParser.parseHourlyForecast(response)
+                return jsonProvider.getHourlyForecastJSON(hourlyForecasts)
             }
             DAILY -> {
-                val dailyForecastPOJO = jsonParser.parseDailyForecast(response)
-                return jsonProvider.getDailyForecastJSON(dailyForecastPOJO)
+                val dailyForecasts = jsonParser.parseDailyForecast(response)
+                return jsonProvider.getDailyForecastJSON(dailyForecasts)
             }
         }
         return null
