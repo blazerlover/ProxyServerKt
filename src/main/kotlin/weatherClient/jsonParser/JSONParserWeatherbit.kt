@@ -2,8 +2,8 @@ package weatherClient.jsonParser
 
 import org.json.JSONObject
 import weatherClient.pojo.CurrentWeatherPOJO
-import weatherClient.pojo.DailyForecastPOJO
-import weatherClient.pojo.HourlyForecastPOJO
+import weatherClient.pojo.OneHourForecastPOJO
+import weatherClient.pojo.OneDayForecastPOJO
 import weatherClient.pojo.Weather
 
 class JSONParserWeatherbit : JSONParser {
@@ -19,9 +19,9 @@ class JSONParserWeatherbit : JSONParser {
         return CurrentWeatherPOJO(weather, pod, temp, feelLike, pressure, humidity, windSpeed)
     }
 
-    override fun parseHourlyForecast(response: JSONObject): HourlyForecastPOJO {
+    override fun parseHourlyForecast(response: JSONObject): Array<OneHourForecastPOJO?> {
         val jsonArray = response.getJSONArray("data")
-        val hourlyForecasts: Array<HourlyForecastPOJO.HourlyForecast?> = arrayOfNulls(48)
+        val hourlyForecasts: Array<OneHourForecastPOJO?> = arrayOfNulls(48)
         for (i in hourlyForecasts.indices) {
             val jsonObject = jsonArray[i] as JSONObject
             val weather = parseWeatherState(jsonObject.getJSONObject("weather"))
@@ -31,14 +31,14 @@ class JSONParserWeatherbit : JSONParser {
             val pressure = jsonObject.getDouble("pres")
             val humidity = jsonObject.getDouble("rh")
             val windSpeed = jsonObject.getDouble("wind_spd")
-            hourlyForecasts[i] = HourlyForecastPOJO.HourlyForecast(weather, pod, date, temp, pressure, humidity, windSpeed)
+            hourlyForecasts[i] = OneHourForecastPOJO(weather, pod, date, temp, pressure, humidity, windSpeed)
         }
-        return HourlyForecastPOJO(hourlyForecasts)
+        return hourlyForecasts
     }
 
-    override fun parseDailyForecast(response: JSONObject): DailyForecastPOJO {
+    override fun parseDailyForecast(response: JSONObject): Array<OneDayForecastPOJO?> {
         val jsonArray = response.getJSONArray("data")
-        val dailyForecasts: Array<DailyForecastPOJO.DailyForecast?> = arrayOfNulls(16)
+        val dailyForecasts: Array<OneDayForecastPOJO?> = arrayOfNulls(16)
         for (i in dailyForecasts.indices) {
             val jsonObject = jsonArray[i] as JSONObject
             val weather = parseWeatherState(jsonObject.getJSONObject("weather"))
@@ -47,9 +47,9 @@ class JSONParserWeatherbit : JSONParser {
             val pressure = jsonObject.getDouble("pres")
             val humidity = jsonObject.getDouble("rh")
             val windSpeed = jsonObject.getDouble("wind_spd")
-            dailyForecasts[i] = DailyForecastPOJO.DailyForecast(weather, date, temp, pressure, humidity, windSpeed)
+            dailyForecasts[i] = OneDayForecastPOJO(weather, date, temp, pressure, humidity, windSpeed)
         }
-        return DailyForecastPOJO(dailyForecasts)
+        return dailyForecasts
     }
 
     private fun parseWeatherState(jsonObject: JSONObject): Weather {
