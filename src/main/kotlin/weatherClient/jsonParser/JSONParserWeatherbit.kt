@@ -5,55 +5,56 @@ import weatherClient.pojo.CurrentWeatherPOJO
 import weatherClient.pojo.OneHourForecastPOJO
 import weatherClient.pojo.OneDayForecastPOJO
 import weatherClient.pojo.Weather
+import weatherServer.*
 
 class JSONParserWeatherbit : JSONParser {
     override fun parseCurrentWeather(response: JSONObject): CurrentWeatherPOJO {
-        val jsonObject = response.getJSONArray("data").getJSONObject(0)
-        val weather = parseWeatherState(jsonObject.getJSONObject("weather"))
-        val pod = jsonObject.getString("pod")
-        val temp = jsonObject.getDouble("temp")
-        val feelLike = jsonObject.getDouble("app_temp")
-        val pressure = jsonObject.getDouble("pres")
-        val humidity = jsonObject.getDouble("rh")
-        val windSpeed = jsonObject.getDouble("wind_spd")
+        val jsonObject = response.getJSONArray(PARSER_KEY_DATA).getJSONObject(0)
+        val weather = parseWeatherState(jsonObject.getJSONObject(PARSER_KEY_WEATHER))
+        val pod = jsonObject.getString(PARSER_KEY_POD)
+        val temp = jsonObject.getDouble(PARSER_KEY_TEMP)
+        val feelLike = jsonObject.getDouble(PARSER_KEY_APP_TEMP)
+        val pressure = jsonObject.getDouble(PARSER_KEY_PRES)
+        val humidity = jsonObject.getDouble(PARSER_KEY_RH)
+        val windSpeed = jsonObject.getDouble(PARSER_KEY_WIND_SPD)
         return CurrentWeatherPOJO(weather, pod, temp, feelLike, pressure, humidity, windSpeed)
     }
 
     override fun parseHourlyForecast(response: JSONObject): Array<OneHourForecastPOJO?> {
-        val jsonArray = response.getJSONArray("data")
+        val jsonArray = response.getJSONArray(PARSER_KEY_DATA)
         val hourlyForecasts: Array<OneHourForecastPOJO?> = arrayOfNulls(48)
         for (i in hourlyForecasts.indices) {
             val jsonObject = jsonArray[i] as JSONObject
-            val weather = parseWeatherState(jsonObject.getJSONObject("weather"))
-            val pod = jsonObject.getString("pod")
-            val date = jsonObject.getLong("ts")
-            val temp = jsonObject.getDouble("temp")
-            val pressure = jsonObject.getDouble("pres")
-            val humidity = jsonObject.getDouble("rh")
-            val windSpeed = jsonObject.getDouble("wind_spd")
+            val weather = parseWeatherState(jsonObject.getJSONObject(PARSER_KEY_WEATHER))
+            val pod = jsonObject.getString(PARSER_KEY_POD)
+            val date = jsonObject.getLong(PARSER_KEY_TS)
+            val temp = jsonObject.getDouble(PARSER_KEY_TEMP)
+            val pressure = jsonObject.getDouble(PARSER_KEY_PRES)
+            val humidity = jsonObject.getDouble(PARSER_KEY_RH)
+            val windSpeed = jsonObject.getDouble(PARSER_KEY_WIND_SPD)
             hourlyForecasts[i] = OneHourForecastPOJO(weather, pod, date, temp, pressure, humidity, windSpeed)
         }
         return hourlyForecasts
     }
 
     override fun parseDailyForecast(response: JSONObject): Array<OneDayForecastPOJO?> {
-        val jsonArray = response.getJSONArray("data")
+        val jsonArray = response.getJSONArray(PARSER_KEY_DATA)
         val dailyForecasts: Array<OneDayForecastPOJO?> = arrayOfNulls(16)
         for (i in dailyForecasts.indices) {
             val jsonObject = jsonArray[i] as JSONObject
-            val weather = parseWeatherState(jsonObject.getJSONObject("weather"))
-            val date = jsonObject.getLong("ts")
-            val temp = jsonObject.getDouble("temp")
-            val pressure = jsonObject.getDouble("pres")
-            val humidity = jsonObject.getDouble("rh")
-            val windSpeed = jsonObject.getDouble("wind_spd")
+            val weather = parseWeatherState(jsonObject.getJSONObject(PARSER_KEY_WEATHER))
+            val date = jsonObject.getLong(PARSER_KEY_TS)
+            val temp = jsonObject.getDouble(PARSER_KEY_TEMP)
+            val pressure = jsonObject.getDouble(PARSER_KEY_PRES)
+            val humidity = jsonObject.getDouble(PARSER_KEY_RH)
+            val windSpeed = jsonObject.getDouble(PARSER_KEY_WIND_SPD)
             dailyForecasts[i] = OneDayForecastPOJO(weather, date, temp, pressure, humidity, windSpeed)
         }
         return dailyForecasts
     }
 
     private fun parseWeatherState(jsonObject: JSONObject): Weather {
-        return Weather(jsonObject.getInt("code"), jsonObject.getString("description"))
+        return Weather(jsonObject.getInt(PARSER_KEY_CODE), jsonObject.getString(PARSER_KEY_DESCRIPTION))
 //        return when (jsonObject.getInt("code")) {
 //            //thunderstorm
 //            in 200..233 -> 700

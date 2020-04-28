@@ -8,6 +8,7 @@ import weatherClient.pojo.CurrentWeatherPOJO
 import weatherClient.pojo.OneDayForecastPOJO
 import weatherClient.pojo.OneHourForecastPOJO
 import weatherClient.pojo.Weather
+import weatherServer.*
 
 class JSONProvider {
 
@@ -16,13 +17,13 @@ class JSONProvider {
     fun getCurrentWeatherJSON(currentWeatherPOJO: CurrentWeatherPOJO): JSONObject {
         jsonObject = JSONObject()
 
-        jsonObject.put("weather", weatherToJSON(currentWeatherPOJO.weather))
-                .put("pod", currentWeatherPOJO.pod)
-                .put("temp", currentWeatherPOJO.temp)
-                .put("feelLike", currentWeatherPOJO.feelLike)
-                .put("pressure", currentWeatherPOJO.pressure)
-                .put("humidity", currentWeatherPOJO.humidity)
-                .put("windSpeed", currentWeatherPOJO.windSpeed)
+        jsonObject.put(PARSER_KEY_WEATHER, weatherToJSON(currentWeatherPOJO.weather))
+                .put(PARSER_KEY_POD, currentWeatherPOJO.pod)
+                .put(PARSER_KEY_TEMP, currentWeatherPOJO.temp)
+                .put(PARSER_KEY_FEEL_LIKE, currentWeatherPOJO.feelLike)
+                .put(PARSER_KEY_PRESSURE, currentWeatherPOJO.pressure)
+                .put(PARSER_KEY_HUMIDITY, currentWeatherPOJO.humidity)
+                .put(PARSER_KEY_WIND_SPEED, currentWeatherPOJO.windSpeed)
         return jsonObject
     }
 
@@ -31,17 +32,17 @@ class JSONProvider {
         jsonObject = JSONObject()
         for (i in hourlyForecasts.indices) {
             val lJsonObject = JSONObject()
-            lJsonObject.put("weather", weatherToJSON(hourlyForecasts[i]?.weather))
-                    .put("pod", hourlyForecasts[i]?.pod)
-                    .put("dt", hourlyForecasts[i]?.date)
-                    .put("eve", hourlyForecasts[i]?.temp)
-                    .put("pressure", hourlyForecasts[i]?.pressure)
-                    .put("humidity", hourlyForecasts[i]?.humidity)
-                    .put("speed", hourlyForecasts[i]?.windSpeed)
+            lJsonObject.put(PARSER_KEY_WEATHER, weatherToJSON(hourlyForecasts[i]?.weather))
+                    .put(PARSER_KEY_POD, hourlyForecasts[i]?.pod)
+                    .put(PARSER_KEY_DATE, hourlyForecasts[i]?.date)
+                    .put(PARSER_KEY_EVE, hourlyForecasts[i]?.eveTemp)
+                    .put(PARSER_KEY_PRESSURE, hourlyForecasts[i]?.pressure)
+                    .put(PARSER_KEY_HUMIDITY, hourlyForecasts[i]?.humidity)
+                    .put(PARSER_KEY_WIND_SPEED, hourlyForecasts[i]?.windSpeed)
             jsonArray.put(i, lJsonObject)
         }
         try {
-            jsonObject.put("list", jsonArray)
+            jsonObject.put(PARSER_KEY_LIST, jsonArray)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -53,16 +54,16 @@ class JSONProvider {
         jsonObject = JSONObject()
         for (i in dailyForecasts.indices) {
             val lJsonObject = JSONObject()
-            lJsonObject.put("weather", weatherToJSON(dailyForecasts[i]?.weather))
-                    .put("dt", dailyForecasts[i]?.date)
-                    .put("eve", dailyForecasts[i]?.temp)
-                    .put("pressure", dailyForecasts[i]?.pressure)
-                    .put("humidity", dailyForecasts[i]?.humidity)
-                    .put("speed", dailyForecasts[i]?.windSpeed)
+            lJsonObject.put(PARSER_KEY_WEATHER, weatherToJSON(dailyForecasts[i]?.weather))
+                    .put(PARSER_KEY_DATE, dailyForecasts[i]?.date)
+                    .put(PARSER_KEY_EVE, dailyForecasts[i]?.eveTemp)
+                    .put(PARSER_KEY_PRESSURE, dailyForecasts[i]?.pressure)
+                    .put(PARSER_KEY_HUMIDITY, dailyForecasts[i]?.humidity)
+                    .put(PARSER_KEY_WIND_SPEED, dailyForecasts[i]?.windSpeed)
             jsonArray.put(i, lJsonObject)
         }
         try {
-            jsonObject.put("list", jsonArray)
+            jsonObject.put(PARSER_KEY_LIST, jsonArray)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -71,8 +72,8 @@ class JSONProvider {
 
     private fun weatherToJSON(weather: Weather?): JSONObject {
         val jsonObject = JSONObject()
-        jsonObject.put("code", weather?.code)
-        jsonObject.put("description", weather?.description)
+        jsonObject.put(PARSER_KEY_CODE, weather?.code)
+        jsonObject.put(PARSER_KEY_DESCRIPTION, weather?.description)
         return jsonObject
     }
 }

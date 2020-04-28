@@ -31,13 +31,13 @@ class URLBuilderWeatherbit: URLBuilder {
             cityName = clientRequest.cityName
         }
         when (clientRequest.requestType) {
-            CURRENT -> {
+            REQUEST_TYPE_VALUE_CURRENT -> {
                 requestType = WEATHERBIT_CURRENT_REQUEST_TYPE
             }
-            HOURLY -> {
+            REQUEST_TYPE_VALUE_HOURLY -> {
                 requestType = WEATHERBIT_HOURLY_REQUEST_TYPE
             }
-            DAILY -> {
+            REQUEST_TYPE_VALUE_DAILY -> {
                 requestType = WEATHERBIT_DAILY_REQUEST_TYPE
             }
         }
