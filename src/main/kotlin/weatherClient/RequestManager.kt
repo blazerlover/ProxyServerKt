@@ -3,9 +3,9 @@ package weatherClient
 import org.json.JSONObject
 import weatherClient.jsonParser.JSONParser
 import weatherClient.urlBuilder.URLBuilder
-import weatherServer.CURRENT
-import weatherServer.DAILY
-import weatherServer.HOURLY
+import weatherServer.REQUEST_TYPE_VALUE_CURRENT
+import weatherServer.REQUEST_TYPE_VALUE_DAILY
+import weatherServer.REQUEST_TYPE_VALUE_HOURLY
 import weatherServer.request.ClientRequest
 
 class RequestManager constructor(
@@ -22,15 +22,15 @@ class RequestManager constructor(
 
     private fun makeClientResponse(response: JSONObject, requestType: String): JSONObject? {
         when (requestType) {
-            CURRENT -> {
+            REQUEST_TYPE_VALUE_CURRENT -> {
                 val currentWeatherPOJO = jsonParser.parseCurrentWeather(response)
                 return jsonProvider.getCurrentWeatherJSON(currentWeatherPOJO)
             }
-            HOURLY -> {
+            REQUEST_TYPE_VALUE_HOURLY -> {
                 val hourlyForecasts = jsonParser.parseHourlyForecast(response)
                 return jsonProvider.getHourlyForecastJSON(hourlyForecasts)
             }
-            DAILY -> {
+            REQUEST_TYPE_VALUE_DAILY -> {
                 val dailyForecasts = jsonParser.parseDailyForecast(response)
                 return jsonProvider.getDailyForecastJSON(dailyForecasts)
             }

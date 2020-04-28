@@ -20,10 +20,10 @@ class ProxyServer {
 
     var requestMaker = RequestMaker()
     var jsonProvider = JSONProvider()
-//    var urlBuilder: URLBuilder = URLBuilderWeatherbit()
-//    var jsonParser = JSONParserWeatherbit()
-    var urlBuilder = URLBuilderOpenWeatherMap()
-    var jsonParser = JSONParserOpenWeatherMap()
+    var urlBuilder: URLBuilder = URLBuilderWeatherbit()
+    var jsonParser = JSONParserWeatherbit()
+//    var urlBuilder = URLBuilderOpenWeatherMap()
+//    var jsonParser = JSONParserOpenWeatherMap()
 
     fun go() {
         val requestManager = RequestManager(requestMaker, urlBuilder, jsonParser, jsonProvider)
