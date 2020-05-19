@@ -6,4 +6,8 @@ class CurrentWeatherPOJO(val weather: Weather,
                          val feelLike: Double,
                          val pressure: Double,
                          val humidity: Double,
-                         val windSpeed: Double)
+                         val windSpeed: Double,
+                         val windDir: String,
+                         val uvIndex: Int,
+                         val visibility: Int,
+                         val dewPoint: Double)

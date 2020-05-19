@@ -1,17 +1,13 @@
 package weatherServer.service
 
 import org.json.JSONObject
-import weatherClient.RequestManager
+import weatherClient.RequestMediator
 import spark.Request
 import spark.Response
-import weatherServer.LATITUDE_KEY
-import weatherServer.LONGITUDE_KEY
-import weatherServer.REQUEST_TYPE_KEY
-import weatherServer.request.ClientRequestByLocation
 import weatherServer.request.ClientRequestFactory
 
 
-class ForecastService(private val requestManager: RequestManager, private val clientRequestFactory: ClientRequestFactory) {
+class ForecastService(private val requestManager: RequestMediator, private val clientRequestFactory: ClientRequestFactory) {
 
     fun serveRequest(request: Request, response: Response): JSONObject? {
         println(request.pathInfo())

@@ -7,7 +7,7 @@ import weatherClient.pojo.DayForecastPOJO
 import weatherClient.pojo.Weather
 import weatherServer.*
 
-class JSONParserWeatherbit : JSONParser {
+class JSONParserWeatherbit(private val windDirectionConverter: WindDirectionConverter) : JSONParser {
     override fun parseCurrentWeather(response: JSONObject): CurrentWeatherPOJO {
         val jsonObject = response.getJSONArray(PARSER_KEY_DATA).getJSONObject(0)
         val weather = parseWeatherState(jsonObject.getJSONObject(PARSER_KEY_WEATHER))
@@ -17,7 +17,11 @@ class JSONParserWeatherbit : JSONParser {
         val pressure = jsonObject.getDouble(PARSER_KEY_PRES)
         val humidity = jsonObject.getDouble(PARSER_KEY_RH)
         val windSpeed = jsonObject.getDouble(PARSER_KEY_WIND_SPD)
-        return CurrentWeatherPOJO(weather, pod, temp, feelLike, pressure, humidity, windSpeed)
+        val windDir = windDirectionConverter.windDirCalculate(jsonObject.getInt(PARSER_KEY_WIND_DIR))
+        val uvIndex = jsonObject.getInt(PARSER_KEY_UV)
+        val visibility = jsonObject.getInt(PARSER_KEY_VIS)
+        val dewPoint = jsonObject.getDouble(PARSER_KEY_DEWPT)
+        return CurrentWeatherPOJO(weather, pod, temp, feelLike, pressure, humidity, windSpeed, windDir, uvIndex, visibility, dewPoint)
     }
 
     override fun parseHourlyForecast(response: JSONObject): Array<HourForecastPOJO?> {

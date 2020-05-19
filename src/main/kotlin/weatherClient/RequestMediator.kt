@@ -8,10 +8,10 @@ import weatherServer.REQUEST_TYPE_VALUE_DAILY
 import weatherServer.REQUEST_TYPE_VALUE_HOURLY
 import weatherServer.request.ClientRequest
 
-class RequestManager constructor(
+class RequestMediator constructor(
     private val requestMaker: RequestMaker,
-    private val urlBuilder: URLBuilder,
-    private val jsonParser: JSONParser,
+    val urlBuilder: URLBuilder,
+    val jsonParser: JSONParser,
     private val jsonProvider: JSONProvider
 ) {
 

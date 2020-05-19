@@ -9,6 +9,8 @@ import weatherClient.pojo.DayForecastPOJO
 import weatherClient.pojo.HourForecastPOJO
 import weatherClient.pojo.Weather
 import weatherServer.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class JSONProvider {
 
@@ -24,6 +26,10 @@ class JSONProvider {
                 .put(PARSER_KEY_PRESSURE, currentWeatherPOJO.pressure)
                 .put(PARSER_KEY_HUMIDITY, currentWeatherPOJO.humidity)
                 .put(PARSER_KEY_WIND_SPEED, currentWeatherPOJO.windSpeed)
+                .put(PARSER_KEY_WIND_DIR, currentWeatherPOJO.windDir)
+                .put(PARSER_KEY_UV_INDEX, currentWeatherPOJO.uvIndex)
+                .put(PARSER_KEY_VISIBILITY, currentWeatherPOJO.visibility)
+                .put(PARSER_KEY_DEW_POINT, currentWeatherPOJO.dewPoint)
         return jsonObject
     }
 
