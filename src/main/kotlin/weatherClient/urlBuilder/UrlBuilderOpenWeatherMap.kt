@@ -1,14 +1,18 @@
 package weatherClient.urlBuilder
 
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 import weatherServer.*
 import weatherServer.request.ClientRequest
 import weatherServer.request.ClientRequestByCityName
 import weatherServer.request.ClientRequestByLocation
-import java.lang.StringBuilder
+import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
 
-class URLBuilderWeatherbit: URLBuilder {
+class UrlBuilderOpenWeatherMap : UrlBuilder {
 
     private lateinit var url: URL
     private var latitude: Double = 0.0
@@ -32,13 +36,13 @@ class URLBuilderWeatherbit: URLBuilder {
         }
         when (clientRequest.requestType) {
             REQUEST_TYPE_VALUE_CURRENT -> {
-                requestType = WEATHERBIT_CURRENT_REQUEST_TYPE
+                requestType = OPEN_WEATHER_MAP_CURRENT_REQUEST_TYPE
             }
             REQUEST_TYPE_VALUE_HOURLY -> {
-                requestType = WEATHERBIT_HOURLY_REQUEST_TYPE
+                requestType = OPEN_WEATHER_MAP_HOURLY_REQUEST_TYPE
             }
             REQUEST_TYPE_VALUE_DAILY -> {
-                requestType = WEATHERBIT_DAILY_REQUEST_TYPE
+                requestType = OPEN_WEATHER_MAP_DAILY_REQUEST_TYPE
             }
         }
     }
@@ -46,8 +50,11 @@ class URLBuilderWeatherbit: URLBuilder {
     private fun buildSelector(requestParams: String): URL {
         return when (requestParams) {
             REQUEST_PARAM_BY_LOCATION -> buildURLByLocation(latitude, longitude)
-            else ->
-                buildURLByCityName(cityName)
+            else -> {
+//                не работает для onecall, приходится вычеслять координаты по названию города!
+                getCityLocation(cityName)
+                buildURLByLocation(latitude, longitude)
+            }
         }
     }
 
@@ -56,13 +63,13 @@ class URLBuilderWeatherbit: URLBuilder {
         val sLongitude = "lon=$longitude"
 
         val builder = StringBuilder()
-        builder.append(WEATHERBIT_PATH)
+        builder.append(OPEN_WEATHER_MAP_PATH)
                 .append(requestType)
                 .append(sLatitude)
                 .append("&")
                 .append(sLongitude)
-//                .append("&units=metric")
-                .append(WEATHERBIT_API_KEY)
+                .append("&units=metric")
+                .append(OPEN_WEATHER_MAP_API_KEY)
         try {
             url = URL(builder.toString())
         } catch (e: MalformedURLException) {
@@ -72,15 +79,16 @@ class URLBuilderWeatherbit: URLBuilder {
         return url
     }
 
+    //не работает для /onecall! нужна платная подписка для другого запроса
     private fun buildURLByCityName(cityName: String): URL {
-        val sCityName = "city=$cityName"
+        val sCityName = "q=$cityName"
 
         val builder = StringBuilder()
-        builder.append(WEATHERBIT_PATH)
+        builder.append(OPEN_WEATHER_MAP_PATH)
                 .append(requestType)
                 .append(sCityName)
-//                .append("&units=metric")
-                .append(WEATHERBIT_API_KEY)
+                .append("&units=metric")
+                .append(OPEN_WEATHER_MAP_API_KEY)
         try {
             url = URL(builder.toString())
         } catch (e: MalformedURLException) {
@@ -88,5 +96,33 @@ class URLBuilderWeatherbit: URLBuilder {
         }
         println(url)
         return url
+    }
+
+    private fun getCityLocation(cityName: String) {
+
+        var message: String? = null
+        val url: URL
+
+        val builder = HttpUrl.parse("https://api.opencagedata.com/geocode/v1/json?q=$cityName&key=608b35e49a8c40b4bdb0d5790029dffd")!!.newBuilder()
+
+        url = builder.build().url()
+        println(url)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+                .url(url)
+                .build()
+        val call = client.newCall(request)
+        try {
+            call.execute().use { response -> message = response.body()!!.string() }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        var jsonObject = JSONObject(message)
+        val jsonArray = jsonObject.getJSONArray("results")
+        jsonObject = jsonArray.getJSONObject(5)
+        println(jsonObject)
+        latitude = jsonObject.getJSONObject("geometry").getDouble("lat")
+        longitude = jsonObject.getJSONObject("geometry").getDouble("lng")
     }
 }

@@ -2,17 +2,17 @@ package weatherClient
 
 import org.json.JSONObject
 import weatherClient.jsonParser.JSONParser
-import weatherClient.urlBuilder.URLBuilder
+import weatherClient.urlBuilder.UrlBuilder
 import weatherServer.REQUEST_TYPE_VALUE_CURRENT
 import weatherServer.REQUEST_TYPE_VALUE_DAILY
 import weatherServer.REQUEST_TYPE_VALUE_HOURLY
 import weatherServer.request.ClientRequest
 
 class RequestMediator constructor(
-    private val requestMaker: RequestMaker,
-    val urlBuilder: URLBuilder,
-    val jsonParser: JSONParser,
-    private val jsonProvider: JSONProvider
+        private val requestMaker: RequestMaker,
+        val urlBuilder: UrlBuilder,
+        val jsonParser: JSONParser,
+        private val jsonProvider: JSONProvider
 ) {
 
     fun getForecast(clientRequest: ClientRequest): JSONObject? {
