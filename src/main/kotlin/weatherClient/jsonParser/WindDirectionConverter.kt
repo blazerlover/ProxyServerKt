@@ -11,7 +11,6 @@ class WindDirectionConverter {
             in 159..202 -> "SOUTH"
             in 203..248 -> "SOUTH-WEST"
             in 249..292 -> "WEST"
-//            293..318
             else -> "NORTH-WEST"
         }
     }

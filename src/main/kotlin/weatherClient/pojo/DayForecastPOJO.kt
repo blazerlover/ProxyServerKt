@@ -8,4 +8,6 @@ class DayForecastPOJO(val weather: Weather,
                       val minTempFeelLike: Double,
                       val pressure: Double,
                       val humidity: Double,
-                      val windSpeed: Double)
+                      val windSpeed: Double,
+                      val windDir: String,
+                      val pop: Int)

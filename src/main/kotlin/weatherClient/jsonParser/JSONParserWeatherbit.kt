@@ -56,8 +56,10 @@ class JSONParserWeatherbit(private val windDirectionConverter: WindDirectionConv
             val pressure = jsonObject.getDouble(PARSER_KEY_PRES)
             val humidity = jsonObject.getDouble(PARSER_KEY_RH)
             val windSpeed = jsonObject.getDouble(PARSER_KEY_WIND_SPD)
+            val windDir = jsonObject.getString(PARSER_KEY_WIND_CDIR_FULL)
+            val pop = jsonObject.getInt(PARSER_KEY_POP)
             dailyForecasts[i] = DayForecastPOJO(weather, date, maxTemp, minTemp, maxTempFeelLike, minTempFeelLike,
-                    pressure, humidity, windSpeed)
+                    pressure, humidity, windSpeed, windDir, pop)
         }
         return dailyForecasts
     }
