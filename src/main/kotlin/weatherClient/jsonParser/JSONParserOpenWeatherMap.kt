@@ -7,17 +7,18 @@ import weatherServer.*
 class JSONParserOpenWeatherMap(private val windDirectionConverter: WindDirectionConverter) : JSONParser {
 
     override fun parseCurrentWeather(response: JSONObject): CurrentWeatherPOJO {
+        val jsonObject = response.getJSONObject(PARSER_KEY_CURRENT)
         val weather = parseWeatherState(response, PARSER_KEY_CURRENT)
         val pod = parsePOD(response, PARSER_KEY_CURRENT)
-        val temp = response.getJSONObject(PARSER_KEY_CURRENT).getDouble(PARSER_KEY_TEMP)
-        val feelLike = response.getJSONObject(PARSER_KEY_CURRENT).getDouble(PARSER_KEY_FEELS_LIKE)
-        val pressure = response.getJSONObject(PARSER_KEY_CURRENT).getDouble(PARSER_KEY_PRESSURE)
-        val humidity = response.getJSONObject(PARSER_KEY_CURRENT).getDouble(PARSER_KEY_HUMIDITY)
-        val windSpeed = response.getJSONObject(PARSER_KEY_CURRENT).getDouble(PARSER_KEY_WIND_SPEED)
-        val windDir = windDirectionConverter.windDirCalculate(response.getJSONObject(PARSER_KEY_CURRENT).getInt(PARSER_KEY_WIND_DEG))
-        val uvIndex = response.getJSONObject(PARSER_KEY_CURRENT).getInt(PARSER_KEY_UVI)
-        val visibility = response.getJSONObject(PARSER_KEY_CURRENT).getInt(PARSER_KEY_VISIBILITY)
-        val dewPoint = response.getJSONObject(PARSER_KEY_CURRENT).getDouble(PARSER_KEY_DEW_POINT)
+        val temp = jsonObject.getDouble(PARSER_KEY_TEMP)
+        val feelLike = jsonObject.getDouble(PARSER_KEY_FEELS_LIKE)
+        val pressure = jsonObject.getDouble(PARSER_KEY_PRESSURE)
+        val humidity = jsonObject.getDouble(PARSER_KEY_HUMIDITY)
+        val windSpeed = jsonObject.getDouble(PARSER_KEY_WIND_SPEED)
+        val windDir = windDirectionConverter.windDirCalculate(jsonObject.getInt(PARSER_KEY_WIND_DEG))
+        val uvIndex = jsonObject.getInt(PARSER_KEY_UVI)
+        val visibility = jsonObject.getInt(PARSER_KEY_VISIBILITY)
+        val dewPoint = jsonObject.getDouble(PARSER_KEY_DEW_POINT)
         return CurrentWeatherPOJO(weather, pod, temp, feelLike, pressure, humidity, windSpeed, windDir, uvIndex, visibility, dewPoint)
     }
 
@@ -53,8 +54,10 @@ class JSONParserOpenWeatherMap(private val windDirectionConverter: WindDirection
             val pressure = jsonObject.getDouble(PARSER_KEY_PRESSURE)
             val humidity = jsonObject.getDouble(PARSER_KEY_HUMIDITY)
             val windSpeed = jsonObject.getDouble(PARSER_KEY_WIND_SPEED)
+            val windDir = windDirectionConverter.windDirCalculate(jsonObject.getInt(PARSER_KEY_WIND_DEG))
+            val pop = 20
             dailyForecasts[i] = DayForecastPOJO(weather, date, maxTemp, minTemp, maxTempFeelLike, minTempFeelLike,
-                    pressure, humidity, windSpeed)
+                    pressure, humidity, windSpeed, windDir, pop)
         }
         return dailyForecasts
     }

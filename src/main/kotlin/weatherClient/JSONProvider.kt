@@ -70,14 +70,20 @@ class JSONProvider {
                     .put(PARSER_KEY_PRESSURE, dailyForecasts[i]?.pressure)
                     .put(PARSER_KEY_HUMIDITY, dailyForecasts[i]?.humidity)
                     .put(PARSER_KEY_WIND_SPEED, dailyForecasts[i]?.windSpeed)
+                    .put(PARSER_KEY_WIND_DIR, dailyForecasts[i]?.windDir)
+                    .put(PARSER_KEY_POP, dailyForecasts[i]?.pop)
             jsonArray.put(i, lJsonObject)
         }
+        putJsonObjectToJsonArray(jsonArray)
+        return jsonObject
+    }
+
+    private fun putJsonObjectToJsonArray(jsonArray: JSONArray) {
         try {
             jsonObject.put(PARSER_KEY_LIST, jsonArray)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return jsonObject
     }
 
     private fun weatherToJSON(weather: Weather?): JSONObject {
